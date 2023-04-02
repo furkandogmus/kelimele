@@ -7,10 +7,7 @@ import com.tahsin.kelimele.core.utilities.results.SuccessDataResult;
 import com.tahsin.kelimele.entities.concretes.Word;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import javax.xml.crypto.Data;
 import java.util.List;
-
 @RestController
 @RequestMapping("/api/words")
 public class WordsController {
@@ -22,7 +19,6 @@ public class WordsController {
         super();
         this.wordService = wordService;
     }
-
     @GetMapping("/getall")
     public DataResult<List<Word>> getAll(){
         return this.wordService.getAll();
@@ -47,12 +43,15 @@ public class WordsController {
         return new SuccessDataResult<Word>(this.wordService.getWordById(word_id).getData());
     }
 
+    @GetMapping("/get")
+    public DataResult<Word> getWord(){
+        return new SuccessDataResult<Word>(this.wordService.getWord().getData());
+    }
+
     @GetMapping("/getByNameStartingWith")
     public DataResult<List<Word>> getWordByNameStartsWith(String prefix){
         return  new SuccessDataResult<List<Word>>(this.wordService.getWordByNameStartsWith(prefix).getData());
     }
-
-
     @GetMapping("/getByNameEndingWith")
     public DataResult<List<Word>> getWordByNameEndsWith(String suffix){
         return  new SuccessDataResult<List<Word>>(this.wordService.getWordByNameEndsWith(suffix).getData());
