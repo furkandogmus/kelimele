@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 @RestController
 @RequestMapping("/api/words")
+@CrossOrigin(origins = "*")
 public class WordsController {
 
 
@@ -48,6 +49,10 @@ public class WordsController {
         return new SuccessDataResult<Word>(this.wordService.getWord().getData());
     }
 
+    @GetMapping("/getLength")
+    public DataResult<Integer> getLength(){return new SuccessDataResult<Integer>(this.wordService.getLength().getData());}
+
+
     @GetMapping("/getByNameStartingWith")
     public DataResult<List<Word>> getWordByNameStartsWith(String prefix){
         return  new SuccessDataResult<List<Word>>(this.wordService.getWordByNameStartsWith(prefix).getData());
@@ -56,4 +61,10 @@ public class WordsController {
     public DataResult<List<Word>> getWordByNameEndsWith(String suffix){
         return  new SuccessDataResult<List<Word>>(this.wordService.getWordByNameEndsWith(suffix).getData());
     }
+
+    @GetMapping("/check")
+    public DataResult<String> checkWord(String name){
+        return new SuccessDataResult<String>(this.wordService.checkUserWord(name).getData(),"Başarılı");
+    }
+
 }

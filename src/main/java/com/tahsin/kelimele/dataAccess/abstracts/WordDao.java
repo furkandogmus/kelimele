@@ -8,9 +8,11 @@ import java.util.List;
 
 public interface WordDao extends JpaRepository<Word,Integer> {
 
+    boolean existsWordByName(String name);
     Word getWordByName(String name);
     Word getWordById(int id);
     List<Word> getWordByNameStartsWith(String prefix);
     List<Word> getWordByNameEndsWith(String suffix);
+
 
 }

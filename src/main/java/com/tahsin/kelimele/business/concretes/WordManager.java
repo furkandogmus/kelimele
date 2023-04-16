@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 
 @Service
@@ -30,6 +31,10 @@ public class WordManager implements WordService {
 
     @Override
     public DataResult<Word> getWordByName(String name) {
+
+        if (name.length()<4 || name.length()>7 || !this.wordDao.existsWordByName(name)) {
+            return new ErrorDataResult<Word>(null,"Kelimeler 4 ile 7 harf arasındadır. ");
+        }
         return new SuccessDataResult<Word>(this.wordDao.getWordByName(name),"Başarılı");
     }
 
@@ -37,7 +42,6 @@ public class WordManager implements WordService {
 
     @Override
     public DataResult<Word> getWordById(int id) {
-
         return new SuccessDataResult<Word>(this.wordDao.getWordById(id),"Başarılı");
     }
 
@@ -53,6 +57,11 @@ public class WordManager implements WordService {
     }
 
     @Override
+    public DataResult<Integer> getLength(){
+        return new SuccessDataResult<Integer>(getWord().getData().getName().length(),"Başarılı");
+    }
+
+    @Override
     public DataResult<List<Word>> getWordByNameStartsWith(String prefix) {
         return new SuccessDataResult<List<Word>>(this.wordDao.getWordByNameStartsWith(prefix),"Başarılı");
     }
@@ -60,6 +69,54 @@ public class WordManager implements WordService {
     @Override
     public DataResult<List<Word>> getWordByNameEndsWith(String suffix) {
         return new SuccessDataResult<List<Word>>(this.wordDao.getWordByNameEndsWith(suffix),"Başarılı");
+    }
+
+    @Override
+    public DataResult<String> checkUserWord(String name) {
+        Word userAnswer = getWordByName(name).getData();
+        if(userAnswer == null){
+            return new ErrorDataResult<Word>(null,"Başarısız");
+        }
+        Word answer = getWord().getData();
+        HashMap<Character,Integer> hm = new HashMap<>();
+        HashMap<Character,Integer> hm2 = new HashMap<>();
+        StringBuilder result = new StringBuilder(answer.getName().length());
+        int size = answer.getName().length();
+        for(int i=0;i<size;i++){
+            hm.put(answer.getName().charAt(i),hm.getOrDefault(answer.getName().charAt(i),0)+1);
+            hm2.put(userAnswer.getName().charAt(i),hm2.getOrDefault(userAnswer.getName().charAt(i),0)+1);
+            result.append("B");
+        }
+        for(int i=0;i<size;i++){
+            if(userAnswer.getName().charAt(i) == answer.getName().charAt(i)) {
+                hm.put(answer.getName().charAt(i), hm.get(answer.getName().charAt(i)) - 1);
+                hm2.put(userAnswer.getName().charAt(i), hm2.get(userAnswer.getName().charAt(i)) - 1);
+                result.setCharAt(i,'G');
+            }
+            }
+        for(int i=0;i<size;i++){
+            if(result.charAt(i)!='G'){
+                if(hm.getOrDefault(userAnswer.getName().charAt(i),0)>0){
+                    hm.put(userAnswer.getName().charAt(i),hm.get(userAnswer.getName().charAt(i))-1);
+                    result.setCharAt(i,'Y');
+                    continue;
+                }
+                result.setCharAt(i,'R');
+            }
+        }
+
+        return new SuccessDataResult<String>(String.valueOf(result),"Başarılı");
+
+
+    }
+
+    @Override
+    public Result existsWordByName(String name) {
+        boolean result = this.wordDao.existsWordByName(name);
+        if(result)
+            return new SuccessResult("Başarılı");
+        else
+            return new ErrorResult("Başarısız");
     }
 
 
