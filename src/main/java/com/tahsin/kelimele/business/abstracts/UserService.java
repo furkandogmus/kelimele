@@ -11,5 +11,8 @@ public interface UserService {
     Result deleteUser(User user);
     Result deleteUserByEmail(String email);
     Result addUser(User user);
+    Result changeGameState(User user);
+    Result changeGameState(User user, Boolean value);
+    Result changeAllStates();
 
 }

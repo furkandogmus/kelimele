@@ -22,3 +22,4 @@ public class KelimeleApplication {
 			return new Docket(DocumentationType.SWAGGER_2).select().apis(RequestHandlerSelectors.basePackage("com.tahsin.kelimele")).build();
 	}
 }
+	

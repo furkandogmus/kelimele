@@ -23,5 +23,9 @@ public class User {
     private String email;
     @Column(name = "point")
     private Long point;
+    @Column(name = "isplayed")
+    private Boolean isPlayed;
+
+
 
 }
